@@ -4,19 +4,15 @@
     Markdown2HTML
 """
 import sys
+import os
 
 
 if __name__ == "__main__":
 
-    try:
-        if len(sys.argv) != 3:
-            raise InvalidNumberOfArgs
-        elif exists(sys.argv[2]) == False:
-            raise NonExistingFile
-    except InvalidNumberOfArgs as e:
-        print ("Usage: ./markdown2html.py README.md README.html")
+    if len(sys.argv) != 3:
+        print ("Usage: ./markdown2html.py README.md README.html", file=sys.stderr)
         exit (1)
-    except NonExistingFile as e:
-        print("Missing {}".format(sys.argv[2]))
+    elif os.path.exists(sys.argv[1]) == False:
+        print("Missing {}".format(sys.argv[1]), file=sys.stderr)
         exit (1)
     exit (0) 
