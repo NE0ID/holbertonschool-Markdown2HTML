@@ -25,6 +25,15 @@ def convert(c, line, tag1, tag2):
     newline += "\n"
     return newline
 
+def nextline(f, line):
+    line = f.readline()
+    return(line)
+
+def is_empty(li):
+    if li:
+        return False
+    return True
+
 if __name__ == "__main__":
 
     if len(sys.argv) != 3:
@@ -35,14 +44,33 @@ if __name__ == "__main__":
         exit (1)
     f = open(sys.argv[1], "r")
     new = open(sys.argv[2], "a")
+    check = []
 
     line = f.readline()
+    count = 0
     while line:
         if "#" in line:
             h = parsing("#", line)
             newline = convert("#", line, "<h{}>".format(h), "</h{}>".format(h))
             new.write(newline)
+        elif "-" in line:
+            count = parsing("-", line)
+            if count > 1:
+                break
+            if is_empty(check):
+                new.write("<ul>\n")
+                check.append("<ul>")
+            if is_empty(check) is False:
+                newline = convert("-", line, "<li>"," </li>")
+                new.write(newline)
+                if not nextline(f, line) or "-" not in nextline(f, line):
+                    new.write("</ul>\n")
+                    check.pop(0)
         else:
+            new.write("<p>")
+            if "\n" in line:
+                new.write("\n<br />\n")
             new.write(line)
+            new.write("</p>")
         line = f.readline()
     exit (0) 
