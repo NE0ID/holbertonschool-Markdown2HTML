@@ -79,12 +79,12 @@ if __name__ == "__main__":
                 check.append("<ol>")
             newline = convert("*", line, "<li>"," </li>")
             new.write(newline)
-        else:
-            new.write("<p>")
-            if "\n" in line:
-                new.write("\n<br />\n")
-            new.write(line)
-            new.write("</p>")
+        #else:
+        #    new.write("<p>")
+        #    if "\n" in line:
+        #        new.write("\n<br />\n")
+        new.write(line)
+        #    new.write("</p>")
         line = f.readline()
         if is_empty(check) is False:
             if line == "" or "-" not in line:
