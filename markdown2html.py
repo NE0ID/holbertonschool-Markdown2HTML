@@ -25,14 +25,22 @@ def convert(c, line, tag1, tag2):
     newline += "\n"
     return newline
 
-def nextline(f, line):
-    line = f.readline()
-    return(line)
+def close(stack, f):
+    op = stack.pop()
+    if op == "<ul>":
+        f.write("</ul>\n")
+    elif op == "<ol>":
+        f.write("</ol>\n")
 
 def is_empty(li):
     if li:
         return False
     return True
+
+def ch_sy(line, sy):
+    if sy not in line:
+        return True
+    return False
 
 if __name__ == "__main__":
 
@@ -47,8 +55,8 @@ if __name__ == "__main__":
     check = []
 
     line = f.readline()
-    count = 0
     while line:
+        count = 0
         if "#" in line:
             h = parsing("#", line)
             newline = convert("#", line, "<h{}>".format(h), "</h{}>".format(h))
@@ -60,12 +68,17 @@ if __name__ == "__main__":
             if is_empty(check):
                 new.write("<ul>\n")
                 check.append("<ul>")
-            if is_empty(check) is False:
-                newline = convert("-", line, "<li>"," </li>")
-                new.write(newline)
-                if not nextline(f, line) or "-" not in nextline(f, line):
-                    new.write("</ul>\n")
-                    check.pop(0)
+            newline = convert("-", line, "<li>"," </li>")
+            new.write(newline)
+        elif "*" in line:
+            count = parsing("*", line)
+            if count > 1:
+                break
+            if is_empty(check):
+                new.write("<ol>\n")
+                check.append("<ol>")
+            newline = convert("*", line, "<li>"," </li>")
+            new.write(newline)
         else:
             new.write("<p>")
             if "\n" in line:
@@ -73,4 +86,7 @@ if __name__ == "__main__":
             new.write(line)
             new.write("</p>")
         line = f.readline()
+        if is_empty(check) is False:
+            if line == "" or "-" not in line:
+                close(check, new)
     exit (0) 
