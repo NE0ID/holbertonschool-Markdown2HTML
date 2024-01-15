@@ -37,11 +37,6 @@ def is_empty(li):
         return False
     return True
 
-def ch_sy(line, sy):
-    if sy not in line:
-        return True
-    return False
-
 if __name__ == "__main__":
 
     if len(sys.argv) != 3:
@@ -65,6 +60,7 @@ if __name__ == "__main__":
             count = parsing("-", line)
             if count > 1:
                 break
+            l = "-"
             if is_empty(check):
                 new.write("<ul>\n")
                 check.append("<ul>")
@@ -74,19 +70,20 @@ if __name__ == "__main__":
             count = parsing("*", line)
             if count > 1:
                 break
+            l = "*"
             if is_empty(check):
                 new.write("<ol>\n")
                 check.append("<ol>")
             newline = convert("*", line, "<li>"," </li>")
             new.write(newline)
-        #else:
+        else:
         #    new.write("<p>")
         #    if "\n" in line:
         #        new.write("\n<br />\n")
-        new.write(line)
+            new.write(line)
         #    new.write("</p>")
         line = f.readline()
         if is_empty(check) is False:
-            if line == "" or "-" not in line:
+            if line == "" or l not in line:
                 close(check, new)
     exit (0) 
