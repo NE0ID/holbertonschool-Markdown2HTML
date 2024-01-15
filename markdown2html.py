@@ -76,6 +76,12 @@ if __name__ == "__main__":
                 check.append("<ol>")
             newline = convert("*", line, "<li>"," </li>")
             new.write(newline)
+        elif "**" in line:
+            count = parsing("*", line)
+            if count < 2 or count > 2:
+                break
+            newline = convert("**", line, "<b>"," </b>")
+            new.write(newline)
         else:
         #    new.write("<p>")
         #    if "\n" in line:
