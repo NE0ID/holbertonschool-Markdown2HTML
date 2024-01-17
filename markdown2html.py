@@ -52,62 +52,54 @@ if __name__ == "__main__":
     check = []
 
     line = f.readline()
+    l = None
     while line:
         count = 0
-        if "<p>" in check and "\n" in line:
-                new.write("\n<br />\n")
         if "#" in line:
             if "<p>" in check:
-                new.write("</p>")
-                check.pop()
+                close(check, new)
             h = parsing("#", line)
-            newline = convert("#", line, "<h{}>".format(h), "</h{}>".format(h))
-            new.write(newline)
-        elif "-" in line:
-            count = parsing("-", line)
-            if count > 1:
-                break
+            line = convert("#", line, "<h{}>".format(h), "</h{}>".format(h))
+
+        if "-" in line:
             if "<p>" in check:
-                new.write("</p>")
-                check.pop()
+                close(check, new)
+            count = parsing("-", line)
+            if count != 1:
+                break
             l = "-"
             if is_empty(check):
                 new.write("<ul>\n")
                 check.append("<ul>")
-            newline = convert("-", line, "<li>"," </li>")
-            new.write(newline)
-        elif "*" in line:
-            count = parsing("*", line)
-            if count > 1:
-                break
+            line = convert("-", line, "<li>"," </li>")
+
+        if "*" in line:
             if "<p>" in check:
-                new.write("</p>")
-                check.pop()
+                close(check, new)
+            count = parsing("*", line)
+            if count != 1:
+                break
             l = "*"
             if is_empty(check):
                 new.write("<ol>\n")
                 check.append("<ol>")
-            newline = convert("*", line, "<li>"," </li>")
-            new.write(newline)
-        elif "**" in line:
-            if "<p>" in check:
-                new.write("</p>")
-                check.pop()
-            newline = convert("**", line, "<b>"," </b>")
-            new.write(newline)
-        elif "__" in line :
-            if "<p>" in check:
-                new.write("</p>")
-                check.pop()
-            newline = convert("__", line, "<em>"," </em>")
-            new.write(newline)
-        elif "<p>" not in check:
-            new.write("<p>")
-            check.append("<p>")
+            line = convert("*", line, "<li>"," </li>")
+
         else:
-            new.write(line)
+            if "<p>" not in check:
+                new.write("<p>\n")
+                check.append("<p>")
+        if "**" in line:
+            line = convert("**", line, "<b>"," </b>")
+
+        if "__" in line :
+            line = convert("__", line, "<em>"," </em>")
+
+        new.write(line)
         line = f.readline()
         if is_empty(check) is False:
-            if line == "" or l not in line:
+            if line == "":
+                close(check, new)
+            elif l != None and l not in line:
                 close(check, new)
     exit (0) 
