@@ -25,6 +25,19 @@ def convert(c, line, tag1, tag2):
     newline += "\n"
     return newline
 
+def part_conv(c, line, tag1, tag2):
+    check = []
+    for i in line:
+        if i == c:
+            if is_empty(check):
+                newline = line.replace(c, "")
+                newline += tag1
+                check.append(tag1)
+            else:
+                newline += tag2
+        newline += i
+    return newline
+
 def close(stack, f):
     op = stack.pop()
     if op == "<ul>":
@@ -90,15 +103,15 @@ if __name__ == "__main__":
 
         else:
             if "<p>" not in check:
-                new.write("<p>\n")
+                new.write("<p>")
                 check.append("<p>")
             if "\n" in line:
                 line = convert("\n", line, "\n<br />\n", "")
             if "**" in line:
-                line = convert("**", line, "<b>"," </b>")
+                line = part_conv("**", line, "<b>"," </b>")
 
             if "__" in line :
-                line = convert("__", line, "<em>"," </em>")
+                line = part_conv("__", line, "<em>"," </em>")
             new.write(line)
 
         line = f.readline()
