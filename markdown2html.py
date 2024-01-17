@@ -59,43 +59,48 @@ if __name__ == "__main__":
             if "<p>" in check:
                 close(check, new)
             h = parsing("#", line)
-            line = convert("#", line, "<h{}>".format(h), "</h{}>".format(h))
+            newline = convert("#", line, "<h{}>".format(h), "</h{}>".format(h))
+            new.write(newline)
 
-        if "-" in line:
+        elif "-" in line:
             if "<p>" in check:
                 close(check, new)
             count = parsing("-", line)
-            if count != 1:
+            if count > 1:
                 break
             l = "-"
             if is_empty(check):
                 new.write("<ul>\n")
                 check.append("<ul>")
-            line = convert("-", line, "<li>"," </li>")
+            newline = convert("-", line, "<li>"," </li>")
+            new.write(newline)
 
-        if "*" in line:
+        elif "*" in line:
             if "<p>" in check:
                 close(check, new)
             count = parsing("*", line)
-            if count != 1:
+            if count > 1:
                 break
             l = "*"
             if is_empty(check):
                 new.write("<ol>\n")
                 check.append("<ol>")
-            line = convert("*", line, "<li>"," </li>")
+            newline = convert("*", line, "<li>"," </li>")
+            new.write(newline)
 
         else:
             if "<p>" not in check:
                 new.write("<p>\n")
                 check.append("<p>")
-        if "**" in line:
-            line = convert("**", line, "<b>"," </b>")
+            if "\n" in line:
+                line = convert("\n", line, "\n<br />\n", "")
+            if "**" in line:
+                line = convert("**", line, "<b>"," </b>")
 
-        if "__" in line :
-            line = convert("__", line, "<em>"," </em>")
+            if "__" in line :
+                line = convert("__", line, "<em>"," </em>")
+            new.write(line)
 
-        new.write(line)
         line = f.readline()
         if is_empty(check) is False:
             if line == "":
