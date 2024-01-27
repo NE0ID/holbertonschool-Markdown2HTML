@@ -95,7 +95,7 @@ if __name__ == "__main__":
             newline = convert("*", line, "<li>"," </li>")
             new.write(newline)
 
-        else:
+        """else:
             if "<p>" not in check and line != "\n":
                 new.write("<p>")
                 check.append("<p>")
@@ -109,7 +109,9 @@ if __name__ == "__main__":
             new.write(line)
 
         if "<p>" in check:
-                close(check, new)
+                close(check, new)"""
+        else:
+            new.write(line)
         line = f.readline()
         if is_empty(check) is False:
             if line == "":
