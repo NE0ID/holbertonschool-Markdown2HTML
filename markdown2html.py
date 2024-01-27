@@ -69,15 +69,11 @@ if __name__ == "__main__":
     while line:
         count = 0
         if "#" in line:
-            if "<p>" in check:
-                close(check, new)
             h = parsing("#", line)
             newline = convert("#", line, "<h{}>".format(h), "</h{}>".format(h))
             new.write(newline)
 
         elif "-" in line:
-            if "<p>" in check:
-                close(check, new)
             count = parsing("-", line)
             if count > 1:
                 break
@@ -89,8 +85,6 @@ if __name__ == "__main__":
             new.write(newline)
 
         elif "*" in line:
-            if "<p>" in check:
-                close(check, new)
             count = parsing("*", line)
             if count > 1:
                 break
@@ -102,11 +96,11 @@ if __name__ == "__main__":
             new.write(newline)
 
         else:
-            if "<p>" not in check:
+            if "<p>" not in check and line != "\n":
                 new.write("<p>")
                 check.append("<p>")
-            if "\n" in line:
-                line = convert("\n", line, "\n<br />\n", "")
+                if "\n" in line and "\n" not in line[::-1]:
+                    new.write("</br>")
             if "**" in line:
                 line = part_conv("**", line, "<b>"," </b>")
 
@@ -114,10 +108,12 @@ if __name__ == "__main__":
                 line = part_conv("__", line, "<em>"," </em>")
             new.write(line)
 
+        if "<p>" in check:
+                close(check, new)
         line = f.readline()
         if is_empty(check) is False:
             if line == "":
                 close(check, new)
             elif l != None and l not in line:
                 close(check, new)
-    exit (0) 
+    exit (0)
