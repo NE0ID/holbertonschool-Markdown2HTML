@@ -95,12 +95,15 @@ if __name__ == "__main__":
             newline = convert("*", line, "<li>"," </li>")
             new.write(newline)
 
-        """else:
+        else:
             if "<p>" not in check and line != "\n":
                 new.write("<p>")
                 check.append("<p>")
-                if "\n" in line and "\n" not in line[::-1]:
-                    new.write("</br>")
+                if "\n" in line:
+                    if "." not in line:
+                        new.write("</br>")
+                    elif "." in line and line.index(".") != line.index("\n") -1:
+                        new.write("</br>")
             if "**" in line:
                 line = part_conv("**", line, "<b>"," </b>")
 
@@ -109,7 +112,7 @@ if __name__ == "__main__":
             new.write(line)
 
         if "<p>" in check:
-                close(check, new)"""
+                close(check, new)
         else:
             new.write(line)
         line = f.readline()
