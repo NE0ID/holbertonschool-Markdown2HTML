@@ -52,6 +52,11 @@ def is_empty(li):
         return False
     return True
 
+def using_line(line1, line2):
+    if is_empty(line2):
+        return line1
+    return line2
+
 if __name__ == "__main__":
 
     if len(sys.argv) != 3:
@@ -68,9 +73,20 @@ if __name__ == "__main__":
     l = None
     while line:
         count = 0
+        newline = line
+        if "*" in line:
+            count = parsing("*", line)
+            if count != 2:
+                break
+            newline = part_conv("**", newline, "<b>", "<b>")
+        if "_" in line:
+            count = parsing("_", line)
+            if count != 2:
+                break
+            newline = part_conv("__", newline, "<em>", "<em>")
         if "#" in line:
             h = parsing("#", line)
-            newline = convert("#", line, "<h{}>".format(h), "</h{}>".format(h))
+            newline = convert("#", newline, "<h{}>".format(h), "</h{}>".format(h))
             new.write(newline)
 
         elif "-" in line:
@@ -81,12 +97,12 @@ if __name__ == "__main__":
             if is_empty(check):
                 new.write("<ul>\n")
                 check.append("<ul>")
-            newline = convert("-", line, "<li>"," </li>")
+            newline = convert("-", newline, "<li>"," </li>")
             new.write(newline)
 
         elif "*" in line:
             count = parsing("*", line)
-            if count > 1:
+            if count != 1:
                 break
             l = "*"
             if is_empty(check):
@@ -94,28 +110,14 @@ if __name__ == "__main__":
                 check.append("<ol>")
             newline = convert("*", line, "<li>"," </li>")
             new.write(newline)
-
         else:
-            if "<p>" not in check and line != "\n":
+            if is_empty(check):
                 new.write("<p>")
                 check.append("<p>")
-                if "\n" in line:
-                    if "." not in line:
-                        new.write("</br>")
-                    elif "." in line and line.index(".") != line.index("\n") -1:
-                        new.write("</br>")
-            if "**" in line:
-                line = part_conv("**", line, "<b>"," </b>")
-
-            if "__" in line :
-                line = part_conv("__", line, "<em>"," </em>")
-            new.write(line)
-
-        if "<p>" in check:
-                close(check, new)
-        else:
-            new.write(line)
+            new.write(newline)
         line = f.readline()
+        if line[0].islower():
+            new.write("<br/>")
         if is_empty(check) is False:
             if line == "":
                 close(check, new)
